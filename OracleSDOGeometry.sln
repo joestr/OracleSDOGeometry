@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpatialGeodata", "SpatialGeodata\SpatialGeodata.csproj", "{99CFED2D-E15B-4B03-8A85-12927651792F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OracleSpatialGeometry", "SpatialGeodata\OracleSpatialGeometry.csproj", "{99CFED2D-E15B-4B03-8A85-12927651792F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{6CCB7FDD-62AB-478A-9B2F-2DB73074D785}"
 EndProject

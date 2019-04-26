@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Program"
         mc:Ignorable="d"
-        Title="Spatial Geodata" MinHeight="350" MinWidth="600" SizeChanged="Dashboard_SizeChanged">
+        Title="Oracle Spatial Geometry" MinHeight="400" MinWidth="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="61*" MinHeight="61"/>
@@ -17,19 +17,18 @@
             <ColumnDefinition Width="221*"/>
             <ColumnDefinition Width="360*"/>
         </Grid.ColumnDefinitions>
-        <Label x:Name="label" MinWidth="150" Content="Buildings" HorizontalAlignment="Stretch"  VerticalAlignment="Top" FontFamily="Segoe UI Light" FontSize="36" Grid.Column="0" Grid.Row="0" Margin="10,0,0,0"/>
-        <ListBox x:Name="listBuildings" Margin="10,0,0,10" SelectionChanged="ListBuildings_SelectionChanged" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="1"/>
-        <DataGrid x:Name="dgCoordinates" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="10,0,0,10" AutoGenerateColumns="False" Grid.Column="1" Grid.Row="1">
+        <Label x:Name="label" MinWidth="150" Content="Gebäude" HorizontalAlignment="Stretch"  VerticalAlignment="Top" FontFamily="Segoe UI Light" FontSize="36" Grid.Column="0" Grid.Row="0" Margin="10,0,0,0"/>
+        <ListBox x:Name="listViewBuildings" Margin="10,0,0,10" SelectionChanged="ListBuildings_SelectionChanged" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Background="#CDEAE6"/>
+        <DataGrid x:Name="dataGridCoordinates" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="10,0,0,10" AutoGenerateColumns="False" Grid.Column="1" Grid.Row="1" Background="#CDEAE6">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding X}" Width="*" Header="X" IsReadOnly="True" CanUserSort="False" CanUserReorder="False" CanUserResize="False"/>
                 <DataGridTextColumn Binding="{Binding Y}" Width="*" Header="Y" IsReadOnly="True" CanUserSort="False" CanUserReorder="False" CanUserResize="False"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="12,0,10,10" Grid.Row="1" Grid.RowSpan="2">
-            <Canvas x:Name="cvMap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="9" Background="#FFE4D8D8">
-            </Canvas>
+        <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,0,10,10" Grid.Row="1">
+            <Canvas x:Name="canvas" HorizontalAlignment="Stretch" Margin="9" Background="#CDEAE6"/>
         </Border>
-        <DataGrid x:Name="dgVisitors" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,0,0,10" Grid.Row="2" Grid.ColumnSpan="2" AutoGenerateColumns="False" SelectionMode="Single">
+        <DataGrid x:Name="dataGridVisitors" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,0,0,10" Grid.Row="2" Grid.ColumnSpan="2" AutoGenerateColumns="False" SelectionMode="Single" Background="#CDEAE6">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding ID}" Width="*" Header="ID" IsReadOnly="True" CanUserSort="True" CanUserReorder="False" CanUserResize="False"/>
                 <DataGridTextColumn Binding="{Binding Name}" Width="*" Header="Name" IsReadOnly="True" CanUserSort="True" CanUserReorder="False" CanUserResize="False"/>
@@ -37,6 +36,5 @@
                 <DataGridTextColumn Binding="{Binding Position.Y}" Width="*" Header="Y" IsReadOnly="True" CanUserSort="True" CanUserReorder="False" CanUserResize="False"/>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBox x:Name="textBox" Grid.Column="2" HorizontalAlignment="Left" Height="45" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="325"/>
     </Grid>
 </Window>

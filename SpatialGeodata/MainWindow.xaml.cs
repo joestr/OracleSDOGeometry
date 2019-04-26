@@ -12,24 +12,24 @@ namespace Program
 {
     public partial class MainWindow : Window
     {
-        private Database db;
+        private Database database;
         private Polygon currentPolygon;
-        private ObservableCollection<Building> obsBuildings = new ObservableCollection<Building>();
-        private ObservableCollection<Point> obsPoints = new ObservableCollection<Point>();
-        private ObservableCollection<Visitor> obsVisitors = new ObservableCollection<Visitor>();
+        private ObservableCollection<Building> observableCollectionBuildings = new ObservableCollection<Building>();
+        private ObservableCollection<Point> observableCollectionPoints = new ObservableCollection<Point>();
+        private ObservableCollection<Visitor> observableCollectionVisitors = new ObservableCollection<Visitor>();
         private List<Point> pointsCurrentPolygon = new List<Point>();
-        private double size_factor = 1;
+        private double sizeFactor = 1;
         public MainWindow()
         {
             InitializeComponent();
             try
             {
-                db = Database.GetInstance();
-                listBuildings.ItemsSource = obsBuildings;
-                dgCoordinates.ItemsSource = obsPoints;
-                dgVisitors.ItemsSource = obsVisitors;
-                FillObsBuildings();
-                FillObsVisitors();
+                database = Database.GetInstance();
+                listViewBuildings.ItemsSource = observableCollectionBuildings;
+                dataGridCoordinates.ItemsSource = observableCollectionPoints;
+                dataGridVisitors.ItemsSource = observableCollectionVisitors;
+                FillBuildings();
+                FillVisitors();
             }
             catch (Exception ex)
             {
@@ -37,17 +37,17 @@ namespace Program
             }
         }
 
-        private void FillObsVisitors()
+        private void FillVisitors()
         {
-            obsVisitors.Clear();
-            foreach (Visitor visitor in db.GetVisitors())
-                obsVisitors.Add(visitor);
+            observableCollectionVisitors.Clear();
+            foreach (Visitor visitor in database.GetVisitors())
+                observableCollectionVisitors.Add(visitor);
         }
 
         private void DrawVisitors()
         {
-            cvMap.Children.RemoveRange(1, obsVisitors.Count);
-            foreach (Visitor v in obsVisitors)
+            canvas.Children.RemoveRange(1, observableCollectionVisitors.Count);
+            foreach (Visitor v in observableCollectionVisitors)
             {
                 Ellipse blueRectangle = new Ellipse();
                 blueRectangle.Height = 10;
@@ -57,17 +57,17 @@ namespace Program
                 blueRectangle.StrokeThickness = 4;
                 blueRectangle.Stroke = blackBrush;
                 blueRectangle.Fill = blueBrush;
-                size_factor = (cvMap.ActualHeight < cvMap.ActualWidth ? cvMap.ActualHeight : cvMap.ActualWidth) / 1000.0;
-                blueRectangle.SetValue(Canvas.LeftProperty, v.Position.X * size_factor);
-                blueRectangle.SetValue(Canvas.TopProperty, v.Position.Y * size_factor);
-                cvMap.Children.Add(blueRectangle);
+                sizeFactor = (canvas.ActualHeight < canvas.ActualWidth ? canvas.ActualHeight : canvas.ActualWidth) / 1000.0;
+                blueRectangle.SetValue(Canvas.LeftProperty, v.Position.X * sizeFactor);
+                blueRectangle.SetValue(Canvas.TopProperty, v.Position.Y * sizeFactor);
+                canvas.Children.Add(blueRectangle);
             }
         }
 
         private void DrawSelectedBuilding()
         {
             if (currentPolygon != null)
-                cvMap.Children.Remove(currentPolygon);
+                canvas.Children.Remove(currentPolygon);
             currentPolygon = new Polygon();
             currentPolygon.Stroke = Brushes.Black;
             currentPolygon.Fill = Brushes.LightBlue;
@@ -75,7 +75,7 @@ namespace Program
             currentPolygon.HorizontalAlignment = HorizontalAlignment.Left;
             currentPolygon.VerticalAlignment = VerticalAlignment.Center;
             currentPolygon.Points = new PointCollection(pointsCurrentPolygon);
-            cvMap.Children.Add(currentPolygon);
+            canvas.Children.Add(currentPolygon);
         }
         /// <summary>
         /// Fills observable points list with Drawing.Points from DB by converting them to System.Windows.Points
@@ -83,34 +83,23 @@ namespace Program
         /// <param name="list">Drawing.Points list from DB</param>
         private void UpdateControlsToSelectedBuilding(List<System.Drawing.Point> list)
         {
-            obsPoints.Clear();
+            observableCollectionPoints.Clear();
             pointsCurrentPolygon.Clear();
-            cvMap.Children.Clear();
-            size_factor = (cvMap.ActualHeight < cvMap.ActualWidth ? cvMap.ActualHeight : cvMap.ActualWidth) / 1000.0;
-            list.ForEach(point => { obsPoints.Add(new Point(point.X, point.Y)); pointsCurrentPolygon.Add(new Point(point.X * size_factor, point.Y * size_factor)); });
+            canvas.Children.Clear();
+            sizeFactor = (canvas.ActualHeight < canvas.ActualWidth ? canvas.ActualHeight : canvas.ActualWidth) / 1000.0;
+            list.ForEach(point => { observableCollectionPoints.Add(new Point(point.X, point.Y)); pointsCurrentPolygon.Add(new Point(point.X * sizeFactor, point.Y * sizeFactor)); });
             DrawSelectedBuilding();
             DrawVisitors();
         }
-        private void FillObsBuildings()
+        private void FillBuildings()
         {
-            obsBuildings.Clear();
-            foreach (Building building in db.GetBuildings())
-                obsBuildings.Add(building);
+            observableCollectionBuildings.Clear();
+            foreach (Building building in database.GetBuildings())
+                observableCollectionBuildings.Add(building);
         }
         private void ListBuildings_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            UpdateControlsToSelectedBuilding(((Building)listBuildings.SelectedItem).GetCollPoints());
-        }
-        /// <summary>
-        /// Resize the polygon acordingly to canvas when window is resized
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Dashboard_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            textBox.Text = "width: " + cvMap.ActualWidth + "    height: " + cvMap.ActualHeight + "    faktor: " + size_factor;
-            if ((Building)listBuildings.SelectedItem != null)
-                UpdateControlsToSelectedBuilding(((Building)listBuildings.SelectedItem).GetCollPoints());
+            UpdateControlsToSelectedBuilding(((Building)listViewBuildings.SelectedItem).GetCollPoints());
         }
     }
 }
