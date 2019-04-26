@@ -1,2 +1,2 @@
-# lude_dude
-Oracle Spatial WPF Programm for LUDE
+# OracleSDOGeometry
+Oracle Spatial WPF Programm for school
