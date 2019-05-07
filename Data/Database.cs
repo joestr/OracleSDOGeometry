@@ -21,15 +21,15 @@ namespace Data
         {
             connection = new OracleConnection(@"user id=d4b23;password=d4b;data source=" +
                                                      "(description=(address=(protocol=tcp)" +
-                                                     "(host=" + ip + ")(port=1521))(connect_data=" +
+                                                     "(host=" + IP + ")(port=1521))(connect_data=" +
                                                      "(service_name=ora11g)))");
             connection.Open();
         }
 
         public static Database GetInstance()
         {
-            if (db == null) db = new Database();
-            return db;
+            if (database == null) database = new Database();
+            return database;
         }
 
         private void ReadBuildingsFromDatabase()
@@ -37,7 +37,6 @@ namespace Data
             OracleCommand command = new OracleCommand(buildings_select, connection);
             OracleDataReader reader = command.ExecuteReader();
             if (reader.HasRows)
-            {
                 while (reader.Read())
                 {
                     if (!sortedListBuildings.ContainsKey(Convert.ToInt32(reader["bId"].ToString())))
@@ -74,9 +73,9 @@ namespace Data
             return sortedListBuildings.Values;
         }
 
-        public void addVisitor(Visitor newVisitor)
+        public void AddVisitor(Visitor newVisitor)
         {
-            OracleCommand cmd = new OracleCommand(visitor_insert, conn);
+            OracleCommand cmd = new OracleCommand(VisitorInsert, connection);
             cmd.Parameters.Add("name", newVisitor.Name);
             cmd.Parameters.Add("x", newVisitor.Position.X);
             cmd.Parameters.Add("y", newVisitor.Position.Y);
@@ -85,7 +84,7 @@ namespace Data
 
         public IList<Visitor> ReadVisitorOfBuilding(Building building)
         {
-            OracleCommand cmd = new OracleCommand(visitors_of_building_select, conn);
+            OracleCommand cmd = new OracleCommand(VisitorsOfBuildingSelect, connection);
             cmd.Parameters.Add("buildingId", building.ID);
             OracleDataReader reader = cmd.ExecuteReader();
             List<Visitor> collVisitors = new List<Visitor>();
@@ -98,8 +97,7 @@ namespace Data
         public string ReadBuildingWhereVisitorOccurs(Visitor selectedItem)
         {
             string rgw = "";
-            
-            OracleCommand cmd = new OracleCommand(buildings_of_visitors_select, conn);
+            OracleCommand cmd = new OracleCommand(BuildingsOfVisitorsSelect, connection);
             cmd.Parameters.Add(new OracleParameter("name", selectedItem.Name));
             OracleDataReader reader = cmd.ExecuteReader();
             if (reader.HasRows)
