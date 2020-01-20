@@ -102,7 +102,7 @@ namespace Program
         private void ListBuildings_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateControlsToSelectedBuilding(((Building)listViewBuildings.SelectedItem).GetCollPoints());
-            IList<Visitor> list = db.ReadVisitorOfBuilding((Building)listViewBuildings.SelectedItem);
+            IList<Visitor> list = database.ReadVisitorOfBuilding((Building)listViewBuildings.SelectedItem);
             string text = "";
             foreach (var visitor in list)
                 text += visitor.Name + ", ";
@@ -111,44 +111,9 @@ namespace Program
             txtVisitors.Content = text;
         }
 
-        /// <summary>
-        /// Resize the polygon and canvas accordingly when window is resized
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Dashboard_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            cvMap.Width = (border.ActualWidth < border.ActualHeight ? border.ActualWidth : border.ActualHeight) - 20;
-            cvMap.Height = (border.ActualHeight < border.ActualWidth ? border.ActualHeight : border.ActualWidth) - 20;
-            if ((Building)listViewBuildings.SelectedItem != null)
-                UpdateControlsToSelectedBuilding(((Building)listViewBuildings.SelectedItem).GetCollPoints());
-        }
-
-        private void CvMap_MouseMove(object sender, MouseEventArgs e)
-        {
-            Point p = Mouse.GetPosition(cvMap);
-            txtCurrentCoordinates.Text = "X: " + (int)(p.X / size_factor) + ", Y: " + (int)(p.Y / size_factor);
-        }
-
-        private void CvMap_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Point p = Mouse.GetPosition(relativeTo: cvMap);
-            Visitor newVisitor = new Visitor(txtNewVisitorName.Text, new System.Drawing.Point((int)(p.X / size_factor), (int)(p.Y / size_factor)));
-            try
-            {
-                db.AddVisitor(newVisitor);
-                obsVisitors.Add(newVisitor);
-                DrawVisitors();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
         private void DgVisitors_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string result = db.ReadBuildingWhereVisitorOccurs((Visitor)dgVisitors.SelectedItem);
+            string result = database.ReadBuildingWhereVisitorOccurs((Visitor)dataGridVisitors.SelectedItem);
             MessageBox.Show(result == "" ? "Außerhalb von Gebäuden!" : result);
         }
     }
